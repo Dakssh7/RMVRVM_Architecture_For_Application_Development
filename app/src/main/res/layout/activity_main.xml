@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="358dp"
+        android:layout_height="366dp"
+        android:layout_above="@+id/start_button"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/count_of_iterations"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Run Duration:\t"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/battery_status_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery Status: \n"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/battery_consumption_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery Consumption:\n "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/battery_info_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery Information:\n "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/run_duration_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Run Duration:\t"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/update_background_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progress_bar"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="3dp"
+        android:layout_centerHorizontal="true"
+        />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/start_button"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="123dp"
+        android:onClick="onStartButtonClick"
+        android:text="Start" />
+
+</RelativeLayout>
