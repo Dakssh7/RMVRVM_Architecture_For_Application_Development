@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Measure Display Energy Consumption</string>
-    <string name="battery_percentage">Battery Percentage: %1$d%%</string>
-    <string name="consumed_time">Time elapsed: %1$d seconds</string>
+    <string name="battery_percentage">Current Battery Percentage: %1$d%%</string>
+    <string name="consumed_time">Time elapsed till now: %1$d seconds</string>
 </resources>
