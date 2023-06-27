@@ -65,17 +65,19 @@
         android:layout_marginTop="60dp"
         android:layout_marginBottom="3dp"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
         />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/start_button"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/linear_layout"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        />
+        android:layout_marginTop="-38dp"
+        android:indeterminate="false"
+        android:layout_above="@+id/start_button"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/start_button"

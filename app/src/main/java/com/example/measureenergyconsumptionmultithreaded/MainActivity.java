@@ -1,76 +1,38 @@
 package com.example.measureenergyconsumptionmultithreaded;
 
-
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-
-
-
 import android.content.BroadcastReceiver;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import android.util.Log;
-
-import org.w3c.dom.Text;
-
 public class MainActivity extends AppCompatActivity {
-    private static final int UPDATE_PROGRESS = 1;
-    private Handler handler;
     private  int finalI;
-
-    private int finalCurrentBatteryLevel;
-
     private static final String TAG = "MainActivity";
     private static final int BATTERY_SAMPLE_INTERVAL_MS = 1000 * 60 * 60; // 1 hour
-
-    private final Handler  mHandler = new Handler(Looper.getMainLooper());
     private TextView mBatteryStatusTextView;
     private TextView mBatteryInfoTextView;
-
     private ProgressBar progressBar;
     private int isThreadRunning = 0;
-
-    private TextView tView;
     String countsString;
     String batteryStatus;
-
     String batteryConsumption, batteryInfo,runDuration;
     private  TextView mRunDuration;
-
     private TextView mcount_of_iterations;
-
     private TextView mBatteryConsumptionTextView;
     private int mStartBatteryLevel;
     private int mEndBatteryLevel;
     private long mStartTime;
     private long mEndTime;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,90 +44,33 @@ public class MainActivity extends AppCompatActivity {
         mBatteryInfoTextView = findViewById(R.id.battery_info_text_view);
         mBatteryConsumptionTextView = findViewById(R.id.battery_consumption_text_view);
         progressBar = findViewById(R.id.progress_bar);
-        tView = findViewById(R.id.update_background_task);
 
         // Register battery level receiver
         IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(mBatteryLevelReceiver, batteryLevelFilter);
 
     }
-
-
-
     private Runnable mBatterySampleRunnable = new Runnable() {
         @Override
         public void run() {
             loadFunction();
-        };
+        }
 
     };
-
     Thread thread = new Thread(mBatterySampleRunnable);
-
-//    private void loadFunction() {
-//    int currentBatteryLevel = getBatteryLevel();
-//    mStartBatteryLevel = currentBatteryLevel;
-//    mStartTime = System.currentTimeMillis();
-//    Log.d(TAG, "loadFunction: started");
-//
-//    final double[] x = {1.0};
-//    ExecutorService executor = Executors.newFixedThreadPool(5);
-//    int chunkSize = 10000;
-//    int i = 0;
-//        long startTimeMillis = System.currentTimeMillis();
-//        long elapsedTimeMillis = 0;
-//        for (; i < Integer.MAX_VALUE &&  (elapsedTimeMillis < 5 * 60 * 1000); i += chunkSize) {
-//
-//            elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
-//
-//            final int start = i;
-//            final int end = Math.min(i + chunkSize, Integer.MAX_VALUE);
-//
-//            // Submit a new task to the thread pool
-//            executor.submit(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    for (int j = start; j < end; j++) {
-//                        x[0] = Math.tan(Math.atan(x[0]));
-//                    }
-//                    Log.d(TAG, "Completed Task [" + start + "-" + (end - 1) + "]");
-//
-//                }
-//            });
-//        }
-//
-//        executor.shutdown();
-//
-////        try {
-////            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-////        } catch (InterruptedException e) {
-////            e.printStackTrace();
-////        }
-//
-//    Log.d(TAG, "Result: " + x[0]);
-//        finalI = i;
-//        isThreadRunning = 2;
-//
-//    }
-
     private void loadFunction() {
         mStartBatteryLevel = getBatteryLevel();
         mStartTime = System.currentTimeMillis();
+
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+        });
 
         Log.d(TAG, "loadFunction: started");
 
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(memoryInfo);
-
-//        long availableMemory = memoryInfo.availMem;
-//        long totalMemory = memoryInfo.totalMem;
-//
-//        double percentAvailable = (double) availableMemory / (double) totalMemory * 100.0;
-
-//        Log.d("Memory", "Available memory: " + percentAvailable + "%");
-//        Log.d("Memory", "Total memory: " + totalMemory / 1048576 + " MB");
 
         final double[] x = {1.0};
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -176,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
         int i = 0;
 
 
-        while (elapsedTimeMillis < 5 * 60 * 1000) {
+        while (elapsedTimeMillis < 5* 60 * 1000) {
+
             final int start = i;
             final int end = i + chunkSize;
 
@@ -195,15 +101,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Submit a new task to the thread pool
-            executor.submit(new Runnable() {
-
-                @Override
-                public void run() {
-                    for (int j = start; j < end; j++) {
-                        x[0] = Math.tan(Math.atan(x[0]));
-                    }
-                    Log.d(TAG, "Completed Task [" + start + "-" + (end - 1) + "]");
+            executor.submit(() -> {
+                for (int j = start; j < end; j++) {
+                    x[0] = Math.tan(Math.atan(x[0]));
                 }
+                Log.d(TAG, "Completed Task [" + start + "-" + (end - 1) + "]");
             });
 
             i += chunkSize;
@@ -244,13 +146,14 @@ public class MainActivity extends AppCompatActivity {
         // update run duration text view
         runDuration = "Run Duration: " + timeDifferenceMs / (1000.0) + " seconds\n\n";
 
-                Log.d(TAG, "run in update in UI via runOnUiThread");
-                progressBar.setVisibility(View.GONE);
-                mcount_of_iterations.setText(countsString);
-                mBatteryStatusTextView.setText(batteryStatus);
-                mRunDuration.setText(runDuration);
-                mBatteryInfoTextView.setText(batteryInfo);
-                mBatteryConsumptionTextView.setText(batteryConsumption);
+        Log.d(TAG, "run in update in UI via main Thread");
+
+        mcount_of_iterations.setText(countsString);
+        mBatteryStatusTextView.setText(batteryStatus);
+        mRunDuration.setText(runDuration);
+        mBatteryInfoTextView.setText(batteryInfo);
+        mBatteryConsumptionTextView.setText(batteryConsumption);
+        progressBar.setVisibility(View.GONE);
     }
 
     private BroadcastReceiver mBatteryLevelReceiver = new BroadcastReceiver() {
@@ -332,28 +235,19 @@ public class MainActivity extends AppCompatActivity {
     public void onStartButtonClick(View v)
     {
         Log.d(TAG, "run: progressbar");
-        progressBar.setVisibility(View.VISIBLE);
-
         if (isThreadRunning == 0){
             Log.d(TAG, "onStartButtonClick: MAIN THREAD START");
             thread.start();
             isThreadRunning = 1;
         }
-
         try{
             thread.join();
             Log.d(TAG, "onStartButtonClick: MAIN THREAD STOPPED");
-
-
         }
         catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         updateUIInformation(finalI);
-
-
-
     }
 }
 
